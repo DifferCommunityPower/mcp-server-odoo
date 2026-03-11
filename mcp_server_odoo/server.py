@@ -74,20 +74,6 @@ class OdooMCPServer:
 
             return JSONResponse(self.get_health_status())
 
-        @self.app.completion()
-        async def handle_completion(ref, argument, context):
-            from mcp.types import Completion
-
-            if argument.name == "model":
-                model_names = self._get_model_names()
-                partial = argument.value or ""
-                if partial:
-                    matches = [m for m in model_names if partial.lower() in m.lower()]
-                else:
-                    matches = model_names
-                return Completion(values=matches[:20])
-            return None
-
         logger.info(f"Initialized Odoo MCP Server v{SERVER_VERSION}")
 
     @contextlib.asynccontextmanager
@@ -258,19 +244,3 @@ class OdooMCPServer:
             },
         }
 
-    def _get_model_names(self) -> list[str]:
-        """Get available model names for autocomplete."""
-        if not self.access_controller:
-            return []
-        try:
-            models = self.access_controller.get_enabled_models()
-            if models:
-                return [m["model"] for m in models]
-            # YOLO mode returns [] meaning "all allowed" — query ir.model directly
-            if self.connection and self.connection.is_authenticated:
-                records = self.connection.search_read("ir.model", [], ["model"], limit=200)
-                return [r["model"] for r in records]
-            return []
-        except Exception as e:
-            logger.debug(f"Failed to get model names for autocomplete: {e}")
-            return []
