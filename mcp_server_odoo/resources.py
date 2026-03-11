@@ -8,7 +8,7 @@ import json
 from typing import Any, Dict, List, Optional
 from urllib.parse import unquote
 
-from mcp.server.fastmcp import Context, FastMCP
+from fastmcp import Context, FastMCP
 from mcp.types import Annotations
 
 from .access_control import AccessControlError, AccessController

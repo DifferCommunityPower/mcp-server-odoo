@@ -7,7 +7,7 @@ and functionality through the Model Context Protocol.
 import contextlib
 from typing import Any, Dict, Optional
 
-from mcp.server import FastMCP
+from fastmcp import FastMCP
 
 from .access_control import AccessController
 from .config import OdooConfig, get_config
@@ -208,9 +208,7 @@ class OdooMCPServer:
         """
         try:
             logger.info(f"Starting MCP server with HTTP transport on {host}:{port}...")
-            self.app.settings.host = host
-            self.app.settings.port = port
-            await self.app.run_streamable_http_async()
+            await self.app.run_http_async(host=host, port=port, transport="streamable-http")
         except KeyboardInterrupt:
             logger.info("Server interrupted by user")
         except (OdooConnectionError, ConfigurationError):
@@ -218,6 +216,17 @@ class OdooMCPServer:
         except Exception as e:
             context = ErrorContext(operation="server_run_http")
             error_handler.handle_error(e, context=context)
+
+    def http_app(self, **kwargs):
+        """Return an ASGI app for use with an external server (e.g. uvicorn).
+
+        Usage:
+            app = OdooMCPServer(config).http_app()
+            # uvicorn mcp_server_odoo.asgi:app
+
+        Kwargs are forwarded to FastMCP.http_app() (path, middleware, json_response, etc.)
+        """
+        return self.app.http_app(transport="streamable-http", **kwargs)
 
     def get_capabilities(self) -> Dict[str, Dict[str, bool]]:
         """Get server capabilities.

@@ -9,7 +9,7 @@ import json
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from mcp.server.fastmcp import Context, FastMCP
+from fastmcp import Context, FastMCP
 from mcp.types import ToolAnnotations
 
 from .access_control import AccessControlError, AccessController

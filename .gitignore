@@ -39,6 +39,7 @@ $RECYCLE.BIN/
 !.aiderignore
 .cursor/
 .cursorrules
+.claude/
 
 # Python byte-compiled / optimized / DLL files
 __pycache__/
