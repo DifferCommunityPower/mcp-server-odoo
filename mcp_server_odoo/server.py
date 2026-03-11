@@ -37,15 +37,18 @@ class OdooMCPServer:
     establishing connection before starting and cleaning up on exit.
     """
 
-    def __init__(self, config: Optional[OdooConfig] = None):
+    def __init__(self, config: Optional[OdooConfig] = None, auth: Optional[Any] = None):
         """Initialize the Odoo MCP server.
 
         Args:
             config: Optional OdooConfig instance. If not provided,
                    will load from environment variables.
+            auth: Optional authentication handler for FastMCP. If not provided, defaults to no authentication.
+
         """
         # Load configuration
         self.config = config or get_config()
+        self.auth = auth
 
         # Set up structured logging
         logging_config.setup()
@@ -62,6 +65,7 @@ class OdooMCPServer:
             name="odoo-mcp-server",
             instructions="MCP server for accessing and managing Odoo ERP data through the Model Context Protocol",
             lifespan=self._odoo_lifespan,
+            auth=self.auth,
         )
 
         @self.app.custom_route("/health", methods=["GET"])
