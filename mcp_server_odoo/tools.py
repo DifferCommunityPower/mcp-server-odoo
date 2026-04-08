@@ -10,6 +10,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from fastmcp import Context, FastMCP
+from fastmcp.server.auth import require_scopes
 from mcp.types import ToolAnnotations
 
 from .access_control import AccessControlError, AccessController
@@ -479,6 +480,7 @@ class OdooToolHandler:
 
         @self.app.tool(
             title="Create Record",
+            auth=require_scopes("write"),
             annotations=ToolAnnotations(
                 readOnlyHint=False,
                 destructiveHint=False,
@@ -505,6 +507,7 @@ class OdooToolHandler:
 
         @self.app.tool(
             title="Update Record",
+            auth=require_scopes("write"),
             annotations=ToolAnnotations(
                 readOnlyHint=False,
                 destructiveHint=False,
@@ -533,6 +536,7 @@ class OdooToolHandler:
 
         @self.app.tool(
             title="Delete Record",
+            auth=require_scopes("write"),
             annotations=ToolAnnotations(
                 readOnlyHint=False,
                 destructiveHint=True,
