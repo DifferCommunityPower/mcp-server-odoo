@@ -6,6 +6,7 @@ actions like creating, updating, or deleting records.
 """
 
 import json
+import os
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
@@ -343,6 +344,33 @@ class OdooToolHandler:
 
     def _register_tools(self):
         """Register all tool handlers with FastMCP."""
+
+        @self.app.tool(
+            title="Get Server Info",
+            annotations=ToolAnnotations(
+                readOnlyHint=True,
+                destructiveHint=False,
+                idempotentHint=True,
+                openWorldHint=False,
+            ),
+        )
+        async def get_server_info() -> dict:
+            """Get server identity and environment metadata.
+
+            Returns canonical information about which Odoo instance this
+            MCP server is connected to. Use this to confirm which
+            environment (production, development, staging) you are
+            operating against. No parameters, no side effects.
+            """
+            from .server import SERVER_VERSION
+
+            return {
+                "environment": os.environ.get("ENVIRONMENT", "unknown"),
+                "base_url": self.config.url,
+                "odoo_version": self.connection.server_version,
+                "database_name": self.connection.database,
+                "server_version": SERVER_VERSION,
+            }
 
         @self.app.tool(
             title="Search Records",
