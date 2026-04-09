@@ -365,7 +365,7 @@ class OdooToolHandler:
             from .server import SERVER_VERSION
 
             return {
-                "environment": os.environ.get("ENVIRONMENT", "unknown"),
+                "environment": os.environ.get("environment", "unknown"),
                 "base_url": self.config.url,
                 "odoo_version": self.connection.server_version,
                 "database_name": self.connection.database,
