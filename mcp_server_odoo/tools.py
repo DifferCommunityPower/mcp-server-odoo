@@ -346,6 +346,7 @@ class OdooToolHandler:
 
         @self.app.tool(
             title="Search Records",
+            auth=require_scopes("read"),
             annotations=ToolAnnotations(
                 readOnlyHint=True,
                 destructiveHint=False,
@@ -389,6 +390,7 @@ class OdooToolHandler:
 
         @self.app.tool(
             title="Get Record",
+            auth=require_scopes("read"),
             annotations=ToolAnnotations(
                 readOnlyHint=True,
                 destructiveHint=False,
@@ -439,6 +441,7 @@ class OdooToolHandler:
 
         @self.app.tool(
             title="List Models",
+            auth=require_scopes("read"),
             annotations=ToolAnnotations(
                 readOnlyHint=True,
                 destructiveHint=False,
@@ -458,6 +461,7 @@ class OdooToolHandler:
 
         @self.app.tool(
             title="List Resource Templates",
+            auth=require_scopes("read"),
             annotations=ToolAnnotations(
                 readOnlyHint=True,
                 destructiveHint=False,
